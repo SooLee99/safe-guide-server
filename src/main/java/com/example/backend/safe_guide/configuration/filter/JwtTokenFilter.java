@@ -47,8 +47,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 token = header.split(" ")[1].trim();
             }
 
-            String userId = JwtTokenUtils.getUserId(token, secretKey);
-            User userDetails = userService.loadUserByUserId(userId);
+            String userName = JwtTokenUtils.getUserId(token, secretKey);
+            User userDetails = userService.loadUserByUserId(userName);
 
             if (!JwtTokenUtils.validate(token, userDetails.getUserId(), secretKey)) {
                 chain.doFilter(request, response);

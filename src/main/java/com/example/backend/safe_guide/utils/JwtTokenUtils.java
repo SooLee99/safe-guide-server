@@ -42,9 +42,9 @@ public class JwtTokenUtils {
         return doGenerateToken(username, expiredTimeMs, key);
     }
 
-    private static String doGenerateToken(String userName, long expireTime, String key) {
+    private static String doGenerateToken(String userId, long expireTime, String key) {
         Claims claims = Jwts.claims();
-        claims.put("userName", userName);
+        claims.put("userId", userId);
 
         return Jwts.builder()
                 .setClaims(claims)

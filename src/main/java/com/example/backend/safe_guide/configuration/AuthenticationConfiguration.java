@@ -11,14 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -29,9 +22,11 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().regexMatchers("^(?!/api/).*");
+
     }
 
     @Override
@@ -49,21 +44,6 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
-                .loginPage("/login")
-                .usernameParameter("userId") // 이 부분을 'userId'로 변경
-                .failureHandler(new AuthenticationFailureHandler() {
-                    @Override
-                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-                                                        AuthenticationException exception) throws IOException, ServletException {
-                        String userId = request.getParameter("userId"); // 'email' 대신 'userId'를 사용
-                        String error = exception.getMessage();
-                        System.out.println("A failed login attempt with userId: " + userId + ". Reason: " + error);
-
-                        String redirectUrl = request.getContextPath() + "/login?error";
-                        response.sendRedirect(redirectUrl);
-                    }
-                });
+                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
     }
 }
