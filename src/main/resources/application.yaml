@@ -33,7 +33,7 @@ spring:
     consumer:
       properties.spring.json.trusted.packages: "*"
       bootstrap-servers: dory.srvs.cloudkafka.com:9094
-      group-id: alarm
+      group-id: qgckhfnz-alarm
       auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

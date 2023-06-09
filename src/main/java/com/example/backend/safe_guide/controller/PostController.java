@@ -76,5 +76,4 @@ public class PostController {
         postService.like(postId, authentication.getName());
         return Response.success();
     }
-
 }
