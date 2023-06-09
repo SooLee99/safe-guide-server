@@ -24,7 +24,7 @@ public class User implements UserDetails {
     private Integer idToken;
     private String userId;
     private String password;
-    private String username;    // ... bb
+    private String username;
     private String phoneNumber;
     private String birth;
     private String gender;

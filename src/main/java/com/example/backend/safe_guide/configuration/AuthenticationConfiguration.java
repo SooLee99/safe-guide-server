@@ -4,6 +4,7 @@ import com.example.backend.safe_guide.configuration.filter.JwtTokenFilter;
 import com.example.backend.safe_guide.exception.CustomAuthenticationEntryPoint;
 import com.example.backend.safe_guide.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,11 +23,12 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
+    @Autowired
+    private CustomLoginFailureHandler customLoginFailureHandler;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().regexMatchers("^(?!/api/).*");
-
     }
 
     @Override
@@ -44,6 +46,10 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("userId")
+                .failureHandler(customLoginFailureHandler);
     }
 }

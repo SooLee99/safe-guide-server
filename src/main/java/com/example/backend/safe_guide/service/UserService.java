@@ -43,13 +43,13 @@ public class UserService {
                 ));
     }
 
-    public String login(String userId, String password) {
-        User savedUser = loadUserByUserId(userId);
+    public String login(String userName, String password) {
+        User savedUser = loadUserByUserId(userName);
         redisRepository.setUser(savedUser);
         if (!encoder.matches(password, savedUser.getPassword())) {
             throw new SafeGuideApplicationException(ErrorCode.INVALID_PASSWORD);
         }
-        return JwtTokenUtils.generateAccessToken(userId, secretKey, expiredTimeMs);
+        return JwtTokenUtils.generateAccessToken(userName, secretKey, expiredTimeMs);
     }
 
 
